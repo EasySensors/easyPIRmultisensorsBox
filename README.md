@@ -78,7 +78,6 @@ The board designed by  [Koresh](https://www.openhardware.io/user/143/projects/Ko
 
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-black.png?raw=true)
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-nrf-1.jpg?raw=true)
-![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-nrf-1.jpg?raw=true)
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/PIRpcb3.jpg?raw=true)
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/pirRFM69cw.jpg?raw=true)
 
