@@ -16,7 +16,7 @@ Best sutable for Home Automation, IOT.  You may think of it as Arduino Pro Mini 
 ## Specification: ##
 
  - Board dimensions 31mm x 41mm.
- - Enclosure dimensions mm x mm
+ - Enclosure dimensions 46mm x 36mm x 18mm 
  - Powered by two CR2032 batteries in series with very high efficient power converter (3.5-10V). JST connector for external battery.
  - Wide temperature range. Tested -20 +40
  - PIR sensor S16-L201D 
