@@ -15,10 +15,11 @@ Best sutable for Home Automation, IOT.  You may think of it as Arduino Pro Mini 
 
 ## Specification: ##
 
- - Board dimensions 31mm x 41mm.
+ - MCU Atmel ATMega328P 8MHz) microcontroller
+ - Radios- HopeRF RFM 69 CW (915, 868 0r 433 MHz) or Nordic Semiconductor NRF 24L01+ radio on board
  - Enclosure dimensions 46mm x 36mm x 18mm 
  - Powered by two CR2032 batteries in series with very high efficient power converter (3.5-10V). JST connector for external battery.
- - Wide temperature range. Tested -20 +40
+ - Wide operating temperature range. Tested -20 +40 Celsius
  - PIR sensor S16-L201D 
  - Temperature and humidity sensor Si7021 
  - High Accuracy Temperature Sensor ±0.4 °C (max), –10 to 85 °C
@@ -30,6 +31,7 @@ Best sutable for Home Automation, IOT.  You may think of it as Arduino Pro Mini 
  - Multiradio board. Rfm69cw and nrf24l01+ are supported.
  - FTDI  header for programming
  - Reverse polarity protection.
+ - Board dimensions 31mm x 41mm.
 
 
 **Arduino IDE Settings**
