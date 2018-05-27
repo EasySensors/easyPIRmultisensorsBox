@@ -76,9 +76,9 @@ Connect the Node to FTDI USB adaptor, Select Pro Mini 8MHz board in Arduino IDE 
 
 The board designed by  [Koresh](https://www.openhardware.io/user/143/projects/Koresh)
 
-![enter image description here](https://github.com/EasySensors/ButtonSizeNode/blob/master/pics/bs1.jpg?raw=true)
-![enter image description here](https://github.com/EasySensors/ButtonSizeNode/blob/master/pics/bs2.jpg?raw=true)
-
-
-
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-black.png?raw=true)
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-nrf-1.jpg?raw=true)
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-nrf-1.jpg?raw=true)
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/PIRpcb3.jpg?raw=true)
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/pirRFM69cw.jpg?raw=true)
 
