@@ -7,6 +7,7 @@
 - Radios - HopeRF RFM 69 CW (915, 868 or 433 MHz) or Nordic Semiconductor NRF 24L01+ radio on board
 - Operating temperature range -20 +40 Celsius
 - Dimensions 46mm x 36mm x 18mm 
+- PIR sensor S16-L201D
 - Temperature and humidity sensor Si7021
 - Light sensor BH1750, spectral responsibility is approximately human eye response.
 - Over the Air, firmware updates (OTA) ready. In combination with preprogrammed Dual Optiboot boot loader and External JDEC EPROM\Flash memory chip on board the Node allows OTA software updates.
