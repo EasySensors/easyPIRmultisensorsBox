@@ -13,7 +13,8 @@
 - Onboard Atmel ATSHA204A CryptoAuthentication chip makes communication with the Node very secured. ATSHA204A implements secured handshake and if handshake fails the Node will not executing any command sent to it
 - Programming header is FTDI, TTL Serial. For programming, you need to have USB TTL Serial – FTDI adaptor
 - MySensors compatible. You can use superb set of scripts and libraries from [mysensors.org](http://www.mysensors.org) project  and convert the node into reliable network of little home sensors, relays and actuators.
-- Dual CR2032 battery 
+- Dual CR2032 batteries in series with high-efficiency power converter (3.5-10V)
+- Supply voltage 3.5-10 Volts
 - Yes, it is open sourced. Completely
 
 Comes with Arduino example sketch and guide to IOT, Smart home ideas.
