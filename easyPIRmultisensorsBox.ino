@@ -28,12 +28,12 @@
 #endif
 
 // Enable and select radio type attached
-//#define MY_RADIO_RFM69
-//#define MY_RFM69_FREQUENCY   RF69_433MHZ
+#define MY_RADIO_RFM69
+#define MY_RFM69_FREQUENCY   RF69_433MHZ
 //#define MY_RFM69_FREQUENCY   RF69_868MHZ
 //#define MY_RFM69_NEW_DRIVER
 
-#define MY_RADIO_NRF24
+//#define MY_RADIO_NRF24
 
 // Comment it out for CW  version radio.
 //#define MY_IS_RFM69HW
@@ -77,6 +77,10 @@ Weather sensor;
 
 
 #define BUTTONS_INTERUPT_PIN 3
+#define RED_LED_PIN 6
+#define YELLOW_LED_PIN 5
+
+
 
 // Assign numbers for all sensors we will report to gateway\controller (they will be created as child devices)
 #define SW_sensor 1
@@ -96,6 +100,8 @@ MyMessage msg_uv(UV_sensor, V_UV);
 unsigned long wdiDelay2  = 0;
 
 int BATTERY_SENSE_PIN = A6;  // select the input pin for the battery sense point
+
+
 
 static int32_t oldLux = 0, lux;
 static int16_t oldHumdty = 0, humdty;
@@ -193,11 +199,12 @@ void before() {
       delay(10);
     #endif
     
-    //lightMeter.begin();
     pinMode(A2, INPUT);
     
-    pinMode(6, OUTPUT);
-    digitalWrite(6,0);
+    pinMode(RED_LED_PIN, OUTPUT);
+    digitalWrite(RED_LED_PIN,0);
+    pinMode(YELLOW_LED_PIN, OUTPUT);
+    digitalWrite(YELLOW_LED_PIN,0);
 }
 
 void setup() {
@@ -219,12 +226,9 @@ unsigned long wdiDelay  = 0;
 
 void loop()
 {
-
-  
-  digitalWrite(6,1);
+  digitalWrite(RED_LED_PIN,1);
   delay(300);
-  digitalWrite(6,0);
-
+  digitalWrite(RED_LED_PIN,0);
   
   noInterrupts();
   _flash.wakeup();
@@ -233,42 +237,26 @@ void loop()
   //No need watch dog in case of battery power.
   //wdt_reset();
 
-  lightMeter.begin();
-  //lightMeter.write8(BH1750_POWER_ON);
-  //delay(200);
-  
-  swarm_report();      
-  
-  lightMeter.write8(BH1750_POWER_DOWN);
 
   //If NACK received retry to send as many as uint8_t rty; times
-
-/*
   uint8_t rty=5;
   static boolean  value = false;
   if ( digitalRead(BUTTONS_INTERUPT_PIN) == HIGH )  while (!send(msg_sw.set(!value), true) && (rty > 0))  rty--;
 
   if (!rty) {
-      digitalWrite(5,1);
-      delay(50);
-      digitalWrite(5,0);
-      delay(50);
-      digitalWrite(5,1);
-      delay(50);
-      digitalWrite(5,0);
-      delay(50);
-      digitalWrite(5,1);
-      delay(50);
-      digitalWrite(5,0);
-      delay(50);
-      digitalWrite(5,1);
-      delay(50);
-      digitalWrite(5,0);
+    for  (int i = 5;i;i--){
+      // failure to get ACK from controller - 4 Blinks in Yellow
+      digitalWrite(YELLOW_LED_PIN,1);
+      delay(30);
+      digitalWrite(YELLOW_LED_PIN,0);
+      delay(30);
+      }
     }
   
   value = !value;
-
-*/
+  lightMeter.begin();
+  swarm_report();      
+  lightMeter.write8(BH1750_POWER_DOWN);
  
  // Go sleep for some milliseconds
   noInterrupts();
