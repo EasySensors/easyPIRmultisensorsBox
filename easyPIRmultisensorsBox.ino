@@ -21,7 +21,6 @@
 // Enable debug prints to serial monitor
 #define MY_DEBUG
 
-#include <MemoryFree.h>
 #include <avr/wdt.h>
 #ifdef __AVR__
   #include <avr/power.h>
@@ -29,9 +28,15 @@
 
 // Enable and select radio type attached
 #define MY_RADIO_RFM69
-#define MY_RFM69_FREQUENCY   RF69_433MHZ
+
+// if you use MySensors 2.0 use this style 
+//#define MY_RFM69_FREQUENCY   RF69_433MHZ
 //#define MY_RFM69_FREQUENCY   RF69_868MHZ
-//#define MY_RFM69_NEW_DRIVER
+//#define MY_RFM69_FREQUENCY   RF69_915MHZ
+
+
+#define MY_RFM69_FREQUENCY   RFM69_433MHZ
+//#define MY_RFM69_FREQUENCY   RFM69_868MHZ
 
 //#define MY_RADIO_NRF24
 
@@ -115,7 +120,7 @@ void swarm_report()
   char VIS_LIGHT[10];
 
 
-  lightMeter.begin(); // need for correct wake up
+  lightMeter.begin(BH1750::ONE_TIME_LOW_RES_MODE); // need for correct wake up
   lux = lightMeter.readLightLevel();// Get Lux value
   // dtostrf(); converts float into string
   long d = (long)(lux - oldLux);
@@ -227,7 +232,7 @@ unsigned long wdiDelay  = 0;
 void loop()
 {
   digitalWrite(RED_LED_PIN,1);
-  delay(300);
+  wait(300);
   digitalWrite(RED_LED_PIN,0);
   
   noInterrupts();
@@ -247,17 +252,16 @@ void loop()
     for  (int i = 5;i;i--){
       // failure to get ACK from controller - 4 Blinks in Yellow
       digitalWrite(YELLOW_LED_PIN,1);
-      delay(30);
+      wait(30);
       digitalWrite(YELLOW_LED_PIN,0);
-      delay(30);
+      wait(30);
       }
     }
   
   value = !value;
-  lightMeter.begin();
+
   swarm_report();      
-  lightMeter.write8(BH1750_POWER_DOWN);
- 
+
  // Go sleep for some milliseconds
   noInterrupts();
   _flash.sleep();
