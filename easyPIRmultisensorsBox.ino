@@ -40,9 +40,6 @@
 
 //#define MY_RADIO_NRF24
 
-// Comment it out for CW  version radio.
-//#define MY_IS_RFM69HW
-
 // Comment it out for Auto Node ID #
 #define MY_NODE_ID 0x90
 
@@ -64,6 +61,7 @@
 #include <Wire.h>
 
 // Written by Christopher Laws, March, 2013.
+// https://github.com/claws/BH1750
 #include <BH1750.h>
 BH1750 lightMeter;
 
@@ -117,7 +115,7 @@ void swarm_report()
   static int oldBatteryPcnt = 0;
   char humiditySi7021[10];
   char tempSi7021[10];
-  char VIS_LIGHT[10];
+  char visualLight[10];
 
 
   lightMeter.begin(BH1750::ONE_TIME_LOW_RES_MODE); // need for correct wake up
@@ -125,19 +123,24 @@ void swarm_report()
   // dtostrf(); converts float into string
   long d = (long)(lux - oldLux);
   Serial.print("abs(lux - oldLux)="); Serial.print(abs(d)); Serial.print(" lux ="); Serial.print(lux); Serial.print(" oldLux ="); Serial.println(oldLux); 
-  dtostrf(lux,5,0,VIS_LIGHT);
-  if ( abs(d) > 50 ) send(msg_vis.set(VIS_LIGHT), true); // Send LIGHT BH1750     sensor readings
-  oldLux = lux;
-  wait(100);
+  dtostrf(lux,5,0,visualLight);
+  if ( abs(d) > 50 ) {
+    // this wait(); is 2.0 and up RFM69 specific. Hope to get rid of it soon
+    wait(100);
+    send(msg_vis.set(visualLight), true);  // Send LIGHT BH1750     sensor readings
+    oldLux = lux;
+  }
 
    
   // Measure Relative Humidity from the Si7021
   humdty = sensor.getRH();
   dtostrf(humdty,0,2,humiditySi7021);  
-  if (humdty != oldHumdty) send(msg_hum.set(humiditySi7021), true); // Send humiditySi7021     sensor readings
-  oldHumdty = humdty; 
-  wait(100);
-  
+  if (humdty != oldHumdty) {
+    wait(100);
+    send(msg_hum.set(humiditySi7021), true); // Send humiditySi7021     sensor readings
+    oldHumdty = humdty; 
+  }
+
   
   // Measure Temperature from the Si7021
   // Temperature is measured every time RH is requested.
@@ -145,9 +148,11 @@ void swarm_report()
   // measurement with getTemp() instead with readTemp()
   temp = sensor.getTemp();
   dtostrf(temp,0,2,tempSi7021);
-  if (temp != oldTemp) send(msg_temp.set(tempSi7021), true); // Send tempSi7021 temp sensor readings
-  oldTemp = temp;
-  wait(100);
+  if (temp != oldTemp) {
+    wait(100);
+    send(msg_temp.set(tempSi7021), true); // Send tempSi7021 temp sensor readings
+    oldTemp = temp;
+  }
 
   // Get the battery Voltage
   int sensorValue = analogRead(BATTERY_SENSE_PIN);
@@ -163,18 +168,15 @@ void swarm_report()
    * 2.0V ~ 600
    */
 
-#ifdef  MY_IS_RFM69HW
-  int batteryPcnt = (sensorValue - 750)  / 1.5;
-#else
+
   int batteryPcnt = (sensorValue - 600)  / 3;
-#endif
   
   batteryPcnt = batteryPcnt > 0 ? batteryPcnt:0; // Cut down negative values. Just in case the battery goes below 2V (2.5V) and the node still working. 
   batteryPcnt = batteryPcnt < 100 ? batteryPcnt:100; // Cut down more than "100%" values. In case of ADC fluctuations. 
 
   if (oldBatteryPcnt != batteryPcnt ) {
-    sendBatteryLevel(batteryPcnt);
     wait(100);
+    sendBatteryLevel(batteryPcnt);
     oldBatteryPcnt = batteryPcnt;
   }
 }
@@ -204,7 +206,6 @@ void before() {
       delay(10);
     #endif
     
-    pinMode(A2, INPUT);
     
     pinMode(RED_LED_PIN, OUTPUT);
     digitalWrite(RED_LED_PIN,0);
@@ -244,11 +245,16 @@ void loop()
 
 
   //If NACK received retry to send as many as uint8_t rty; times
-  uint8_t rty=5;
+  uint8_t retry = 5, waitTime = 50;
   static boolean  value = false;
-  if ( digitalRead(BUTTONS_INTERUPT_PIN) == HIGH )  while (!send(msg_sw.set(!value), true) && (rty > 0))  rty--;
+  if ( digitalRead(BUTTONS_INTERUPT_PIN) == HIGH )  {
+    while (!send(msg_sw.set(!value), true) && (retry > 0))  {
+      // send did not go through, try  "uint8_t retry = 5" more times
+      wait(waitTime); retry--; waitTime+=10;
+    }
+  }
 
-  if (!rty) {
+  if (!retry) {
     for  (int i = 5;i;i--){
       // failure to get ACK from controller - 4 Blinks in Yellow
       digitalWrite(YELLOW_LED_PIN,1);
@@ -267,7 +273,6 @@ void loop()
   _flash.sleep();
   interrupts();
   
-  //sleep(180000);
-  sleep(BUTTONS_INTERUPT_PIN - 2, RISING,0);  //, 300000
+  sleep(BUTTONS_INTERUPT_PIN - 2, RISING,0);  // 300000
 }
 
