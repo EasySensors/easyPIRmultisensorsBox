@@ -4,6 +4,7 @@
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-blackCr.png?raw=true)
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/PIRpcb3cr.jpg?raw=true)
 ![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/EasyPIR-nrf-1cr.jpg?raw=true)
+![enter image description here](https://github.com/EasySensors/easyPIRmultisensorsBox/blob/master/pics/Easy-PIR-white-Box_cr.jpg?raw=true)
 
 
 **The easyPIRmultisensorsBox is a low cost wireless Arduino IDE compatible (the Atmel ATMega328P 8MHz) microcontroller with RFM 69 CW or Nordic Semiconductor’s NRF 24L01+ radio on board and few other nice additions.** 
