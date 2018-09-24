@@ -36,7 +36,7 @@
 
 
 #define MY_RFM69_FREQUENCY   RFM69_433MHZ
-//#define MY_RFM69_FREQUENCY   RFM69_868MHZ
+//#define MY_RFM69_FREQUENCY   RFM69_868MHZ 
 
 //#define MY_RADIO_NRF24
 
@@ -90,15 +90,12 @@ Weather sensor;
 #define HUM_sensor 2
 #define TEMP_sensor 3
 #define VIS_sensor 4
-#define UV_sensor 5
+
 
 // Create MyMessage Instance for sending readins from sensors to gateway\controller (they will be created as child devices)
 
 MyMessage msg_sw(SW_sensor, V_LIGHT);
-MyMessage msg_hum(HUM_sensor, V_HUM);
-MyMessage msg_temp(TEMP_sensor, V_TEMP);
 MyMessage msg_vis(VIS_sensor, V_LIGHT_LEVEL);
-MyMessage msg_uv(UV_sensor, V_UV);
 
 unsigned long wdiDelay2  = 0;
 
@@ -131,47 +128,15 @@ void swarm_report()
     oldLux = lux;
   }
 
-   
-  // Measure Relative Humidity from the Si7021
-  humdty = sensor.getRH();
-  dtostrf(humdty,0,2,humiditySi7021);  
-  if (humdty != oldHumdty) {
-    wait(100);
-    send(msg_hum.set(humiditySi7021), true); // Send humiditySi7021     sensor readings
-    oldHumdty = humdty; 
-  }
-
-  
-  // Measure Temperature from the Si7021
-  // Temperature is measured every time RH is requested.
-  // It is faster, therefore, to read it from previous RH
-  // measurement with getTemp() instead with readTemp()
-  temp = sensor.getTemp();
-  dtostrf(temp,0,2,tempSi7021);
-  if (temp != oldTemp) {
-    wait(100);
-    send(msg_temp.set(tempSi7021), true); // Send tempSi7021 temp sensor readings
-    oldTemp = temp;
-  }
-
   // Get the battery Voltage
   int sensorValue = analogRead(BATTERY_SENSE_PIN);
-  // 1M, 470K divider across battery and using internal ADC ref of 1.1V1
-  // ((1e6+470e3)/470e3)*1.1 = Vmax = 3.44 Volts
-  /* The MySensors Lib uses internal ADC ref of 1.1V which means analogRead of the pin connected to 470kOhms Battery Devider reaches  
-   * 1023 when voltage on the divider is around 3.44 Volts. 2.5 volts is equal to 750. 2 volts is equal to 600. 
-   * RFM 69 CW works stable up to 2 volts. Assume 2.5 V is 0% and 1023 is 100% battery charge    
-   * RFM 69 HCW works stable up to 2.5 volts (sometimes it can work up to 2.0V). Assume 2.5 V is 0% and 1023 is 100% battery charge  
-   * 3.3V ~ 1023
-   * 3.0V ~ 900
-   * 2.5V ~ 750 
-   * 2.0V ~ 600
+  /* 1M, 470K divider across batteries
+   * 610 ~ 100 % is close to 6.1 V
+   * 400 ~ 0 % is close to 4V
    */
-
-
-  int batteryPcnt = (sensorValue - 600)  / 3;
+  int batteryPcnt = (sensorValue - 400)  / 2;
   
-  batteryPcnt = batteryPcnt > 0 ? batteryPcnt:0; // Cut down negative values. Just in case the battery goes below 2V (2.5V) and the node still working. 
+  batteryPcnt = batteryPcnt > 0 ? batteryPcnt:0; // Cut down negative values. Just in case the battery goes below 4V and the node still working. 
   batteryPcnt = batteryPcnt < 100 ? batteryPcnt:100; // Cut down more than "100%" values. In case of ADC fluctuations. 
 
   if (oldBatteryPcnt != batteryPcnt ) {
@@ -223,8 +188,6 @@ void presentation()
 
   // Register all sensors to gw (they will be created as child devices)
   present(SW_sensor, V_LIGHT);
-  present(HUM_sensor, S_HUM);
-  present(TEMP_sensor, S_TEMP);
   present(VIS_sensor, S_LIGHT_LEVEL);
 }
 
@@ -233,7 +196,7 @@ unsigned long wdiDelay  = 0;
 void loop()
 {
   digitalWrite(RED_LED_PIN,1);
-  wait(300);
+  wait(100);
   digitalWrite(RED_LED_PIN,0);
   
   noInterrupts();
