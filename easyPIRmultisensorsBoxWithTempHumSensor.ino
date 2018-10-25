@@ -175,10 +175,6 @@ void before() {
     wdt_disable();
   
     
-    noInterrupts();
-    _flash.initialize();
-    interrupts();
-
     #ifdef  MY_RADIO_RFM69
       /*  RFM reset pin is 9
        *  A manual reset of the RFM69HCW\CW is possible even for applications in which VDD cannot be physically disconnected.
@@ -225,6 +221,7 @@ void loop()
   digitalWrite(RED_LED_PIN,0);
   
   noInterrupts();
+  _flash.initialize(); 
   _flash.wakeup();
   interrupts();
   
