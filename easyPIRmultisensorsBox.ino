@@ -151,10 +151,6 @@ void before() {
     //wdt_enable(WDTO_4S);
     wdt_disable();
   
-    
-    noInterrupts();
-    _flash.initialize();
-    interrupts();
 
     #ifdef  MY_RADIO_RFM69
       /*  RFM reset pin is 9
@@ -200,6 +196,7 @@ void loop()
   digitalWrite(RED_LED_PIN,0);
   
   noInterrupts();
+  _flash.initialize(); 
   _flash.wakeup();
   interrupts();
   
